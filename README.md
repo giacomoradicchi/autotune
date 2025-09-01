@@ -24,4 +24,4 @@ Alcuni miglioramenti possibili includono:
 
 ---
 
-⚠️ Nota: Questo progetto è sperimentale e destinato principalmente allo studio dei principi di base del pitch shifting automatico.
+⚠️ Nota: Questo progetto è sperimentale e destinato principalmente allo studio dei principi di base del pitch shifting automatico. La versione in MATLAB è ancora in fase di miglioramento.
