@@ -1,0 +1,18 @@
+[project]
+name = "py-autotune"
+version = "0.0.1"
+description = "Libreria Python per autotune su file audio."
+authors = [{ name = "Gabriele Turelli", email = "gabrieleturelli2004@gmail.com" }]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "numpy",
+    "scipy",
+    "soundfile"
+]
+
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
