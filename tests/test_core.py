@@ -1,5 +1,5 @@
 import numpy as np
-from py_autotune.core import autotune_audio
+from autotune.core import autotune_audio
 import soundfile as sf
 import os
 
