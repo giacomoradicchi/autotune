@@ -244,6 +244,8 @@ x, fs = sf.read(input_file)
 if x.ndim > 1 and np.shape(x)[1] > 1:
    x = x[:, 0]
 
+x = np.zeros(shape=(np.shape(x)[0]), dtype=np.float32)
+
 print("Starting tuning...")
 x_tuned = tuning(x, fs, selected_key)
 

@@ -1,0 +1,3 @@
+c/.vscode/*
+c/build/*
+CMakePresets.json
