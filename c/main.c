@@ -10,6 +10,7 @@
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
 #include "autotune.h"
+#include "draw.h"
 
 #define USE_NOTE            "C" //nota usata per tuning
 #define USE_SCALE           12 //C minore
@@ -28,6 +29,7 @@
 ma_device device;
 ma_channel_converter converter;
 AutotuneParams params;
+DrawParams drawParams;
 
 double input[SAMPLE_LENGTH];
 double result[SAMPLE_LENGTH];
@@ -54,34 +56,22 @@ void AudioCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 
     Autotune(&params, input, result, SAMPLE_LENGTH, SAMPLE_RATE, USE_NOTE, USE_SCALE);
 
-    //for (ma_uint32 i = 0; i < frameCount; i++) 
-       //speaker[i] = input[i];
+    // for (ma_uint32 i = 0; i < frameCount; i++) 
+    //    result[i] = input[i];
 
     for (ma_uint32 i = 0; i < frameCount; i++)
     {
         float sample = result[i]; // il tuo campione mono
 
         // Copia lo stesso sample su tutti i canali
-        for (int ch = 0; ch < 1; ch++)
+        for (int ch = 0; ch < CHANNELS; ch++)
         {
-            speaker[i * 1 + ch] = sample;
+            speaker[i * CHANNELS + ch] = sample;
         }
     }
 
-/*
-
-
-    ma_result result = ma_channel_converter_process_pcm_frames(&converter, speaker, outputAudio, frameCount);
-    if (result != MA_SUCCESS) 
-    {
-        printf("Errore conversione: %d\n", result);
-        return;
-    }*/
-
-    /* In this example the format and channel count are the same for both input and output which means we can just memcpy(). */
-    //MA_COPY_MEMORY(pOutput, pInput, frameCount * ma_get_bytes_per_frame(pDevice->capture.format, pDevice->capture.channels));
-
-    printf("%d\n", frameCount);
+    SetVoice(&drawParams, input, SAMPLE_LENGTH);
+    SetTunedVoice(&drawParams, result, SAMPLE_LENGTH);
 }
 
 int StartMicrophone()
@@ -96,7 +86,7 @@ int StartMicrophone()
     config.capture.shareMode  = ma_share_mode_shared;
     config.playback.pDeviceID = NULL;
     config.playback.format    = ma_format_f32;
-    config.playback.channels  = 1;
+    config.playback.channels  = CHANNELS;
     config.sampleRate         = 48000;
     config.dataCallback       = AudioCallback;
     config.periodSizeInFrames = SAMPLE_LENGTH;
@@ -139,29 +129,18 @@ void StopMicrophone()
     ma_device_uninit(&device);
 }
 
-int main(void) 
+int main(int argc, char* argv[]) 
 {
     if(!StartMicrophone())
         return 1;
 
     AllocateAutotuneParams(&params);
+    AllocateDrawParams(&drawParams, 800, 450);
 
-    // InitWindow(800, 450, "Autotune");
-    // SetTargetFPS(60);
+    GraphicsLoop(&drawParams);
+    StopMicrophone();
 
-    // while (!WindowShouldClose()) 
-    // {
-    //     BeginDrawing();
-    //     ClearBackground(RAYWHITE);
-
-    //     //DrawLine()
-    //     EndDrawing();
-    // }
-
-    // CloseWindow();
-
-    _getch();
-
+    DestroyDrawParams(&drawParams);
     DestroyAutotuneParams(&params);
 
     return 0;

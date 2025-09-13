@@ -1,3 +1,4 @@
 c/.vscode/*
 c/build/*
+c/build_msvc/*
 CMakePresets.json

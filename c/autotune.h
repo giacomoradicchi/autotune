@@ -24,9 +24,6 @@ typedef struct
     double* resampledFrame;
     uint16_t curResampleSize;
 
-
-
-
     double* stretchedFrame;
     uint16_t curStretchedSize;
 
