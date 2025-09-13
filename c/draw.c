@@ -51,6 +51,8 @@ int GraphicsLoop(DrawParams* params)
 
     int running = 1;
     SDL_Event e;
+    int h2 = params->height >> 1;
+
     while (running) 
     {
         while (SDL_PollEvent(&e)) 
@@ -62,14 +64,16 @@ int GraphicsLoop(DrawParams* params)
         SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
         SDL_RenderClear(ren);
 
-        SDL_SetRenderDrawColor(ren, 0, 255, 0, 255);
-
         SDL_LockMutex(params->mutex);
+
+        SDL_SetRenderDrawColor(ren, 0, 255, 0, 255);
         for(int x = 0; x < params->width - 1; x++)
-        {
             SDL_RenderDrawLine(ren, x, params->voice[x], x + 1, params->voice[x + 1]);
-            SDL_RenderDrawLine(ren, x, params->tuned[x], x + 1, params->tuned[x + 1]);
-        }
+            
+        SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+        for(int x = 0; x < params->width - 1; x++)
+            SDL_RenderDrawLine(ren, x, h2 + params->tuned[x], x + 1, h2 + params->tuned[x + 1]);
+
         SDL_UnlockMutex(params->mutex);     
 
         SDL_RenderPresent(ren);
