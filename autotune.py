@@ -1,6 +1,7 @@
 import numpy as np
 import scipy as sp
 import soundfile as sf
+import librosa
 
 # Settings
 input_file = "my_audio.wav"
