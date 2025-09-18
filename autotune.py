@@ -138,7 +138,7 @@ def find_pitch(sample, sr):
     delta_lag = np.argmin(diff_areas)
 
 
-    return fs / (delta_lag + min_lag)
+    return sr / (delta_lag + min_lag)
 
 
 def get_difference_area(x1, x2):
