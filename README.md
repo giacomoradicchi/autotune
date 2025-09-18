@@ -1,27 +1,65 @@
-# Autotune from Scratch 🎶
+# python-autotune
 
-Questo progetto contiene un’implementazione prototipale di un algoritmo di **autotuning** sviluppato interamente da zero, sia in **MATLAB** che in **Python**.
+Libreria Python per correzione automatica dell’intonazione (autotune) su file audio.
 
-## Descrizione
-L’approccio seguito si basa su:
-- Segmentazione del segnale in frame con finestra di Hanning
-- Stima della frequenza fondamentale (pitch detection)
-- Correzione verso la nota più vicina in una scala musicale selezionata
-- Ricostruzione del segnale mediante tecnica di **overlap-add**
+## Installazione
 
-## Finalità
-Il progetto ha scopi **didattici e dimostrativi**: non si tratta di una versione ottimizzata o pronta per l’uso in ambito produttivo.
+```bash
+pip install python-autotune
+```
 
-## Sviluppi futuri
-Alcuni miglioramenti possibili includono:
-- Resampling sinc-based per una migliore qualità spettrale
-- Preservazione delle formanti vocali
-- Ottimizzazione delle prestazioni computazionali (attualmente penalizzate dall’uso di cicli `for` in linguaggi interpretati)
+## Utilizzo rapido
 
-## Linguaggi
-- MATLAB
-- Python
+```python
+from autotune import autotune_audio
 
----
+autotune_audio("input.wav", "output.wav", key="C major")
+```
 
-⚠️ Nota: Questo progetto è sperimentale e destinato principalmente allo studio dei principi di base del pitch shifting automatico. La versione MATLAB è ancora in fase di miglioramento.
+## Funzionalità
+- Pitch detection (stima della frequenza fondamentale)
+- Pitch shifting (modifica dell’intonazione)
+- Correzione automatica verso la nota più vicina in una scala musicale
+- API Python semplice e modulare
+
+## API
+
+### autotune_audio
+```python
+autotune_audio(input_path, output_path, key="C major")
+```
+Applica autotune a un file audio WAV.
+
+### tuning
+```python
+tuning(data, sr, scale="chromatic")
+```
+Applica autotune a un array numpy.
+
+## Esempio avanzato
+
+```python
+import soundfile as sf
+from py_autotune.core import tuning
+
+x, sr = sf.read("input.wav")
+x_tuned = tuning(x, sr, scale="A minor")
+sf.write("output.wav", x_tuned, sr)
+```
+
+## Scale supportate
+- Maggiori, minori, cromatica
+
+## Dipendenze
+- numpy
+- scipy
+- soundfile
+
+## Test
+Esegui i test automatici:
+```bash
+pytest tests/
+```
+
+## Licenza
+MIT
