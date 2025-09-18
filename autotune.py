@@ -42,7 +42,7 @@ dict_scale = {
 }
 
 
-def time_stretch(x, fs, stretch_factor, frame_length=2048, hop_length=512):
+def phase_vocoder(x, fs, stretch_factor, frame_length=2048, hop_length=512):
     # Short time Fourier Transform
     f, t, S = sp.signal.stft(x, fs=fs, nperseg=frame_length, noverlap=frame_length-hop_length, window=np.hanning(frame_length))
 
@@ -87,19 +87,27 @@ def time_stretch(x, fs, stretch_factor, frame_length=2048, hop_length=512):
     _, x_stretched = sp.signal.istft(new_S, fs=fs, nperseg=frame_length, noverlap=frame_length-hop_length)
     return x_stretched
 
+def fix_length(x, target_length):
+    if len(x) > target_length:
+        return x[:target_length]
+    else:
+        return np.pad(x, (0, target_length - len(x)), mode='constant')
+
 def pitch_shifting(x, fs, pitch_factor, frame_length=2048, hop_length=512):
-    x_stretched = time_stretch(x, fs, 1/pitch_factor, frame_length=2048, hop_length=512)
-    stretched_length = len(x_stretched)
+    # time stretch with phase vocoder
+    x_stretched = phase_vocoder(x, fs, 1/pitch_factor, frame_length=2048, hop_length=512)
 
-    t_old = np.arange(0, stretched_length)
-    t_new = np.arange(0, stretched_length, pitch_factor)
-    x_pitched = np.interp(t_new, t_old, x_stretched)
+    # pitch shift
+    new_sr = fs / pitch_factor
+    x_pitched = librosa.resample(
+        y=x_stretched,
+        orig_sr=fs,
+        target_sr=new_sr,
+        res_type="soxr_hq"
+      )
 
-    t_old = np.arange(0, len(x_pitched))
-    t_new = np.arange(0, len(x))
-    x_pitched = np.interp(t_new, t_old, x_pitched)
-
-    return x_pitched
+    # fixing length to make sure that the length will stay the same
+    return fix_length(x_pitched, len(x))
 
 def find_best_lag(current_sample, frame, start_index, n_overlap):
     max_lag = n_overlap // 8
