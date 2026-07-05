@@ -1,5 +1,6 @@
 # Autotune from Scratch 🎶
 
+Take a look at the [new version](https://github.com/giacomoradicchi/pitch_correction)!
 Questo progetto contiene un’implementazione prototipale di un algoritmo di **autotuning** sviluppato interamente da zero, sia in **MATLAB** che in **Python**.
 
 > [Provalo Qui!](https://huggingface.co/spaces/giacomoradicchi/autotune)
